@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { BiotoolsApplicationService } from './services/biotools-application.service';
 import { BiotoolsApplication } from './services/biotools-application';
 import { ErrorService, DeploymentService, Application, ApplicationService,
-    CredentialService, TokenService, Configuration, ConfigurationService
+    CredentialService, TokenService, Configuration, ConfigurationService, AuthService
   } from 'ng2-cloud-portal-service-lib';
 import { DeployNfsClientModalComponent } from './deploy-nfs-client-modal.component';
 import { DeployEcpImageModalComponent } from './deploy-ecp-image-modal.component';
@@ -47,7 +47,8 @@ export class BiotoolsRepoPageComponent {
               public deploymentService: DeploymentService,
               public applicationService: ApplicationService,
               public configurationService: ConfigurationService,
-              private modalService: BsModalService) {
+              private modalService: BsModalService,
+              private _authService: AuthService) {
     this._updateRepository();
     if (this.tokenService.getToken()) this.updateConfigurations(true);
     this.newBioToolsDeploymentForm = this.fb.group({
@@ -321,36 +322,44 @@ export class BiotoolsRepoPageComponent {
     this.bsModalRef.content.downloadNote = note;
   }
 
-  public loginAndOpenBinder(application: BiotoolsApplication) {
+  public openNewBinder(application: BiotoolsApplication){
     var binderRepoUrl = this.getBinderRepoUrl(application);
-    var hubLoginURI = environment.binderHubAPI+'login';
-    this.deploymentService.loginBinder(this.tokenService.getToken(),
-      hubLoginURI).subscribe(
-      res => {
-        console.log('[ApplicationComponent]  success %O', res);
-        window.open(binderRepoUrl, '_blank');
-      },
-      error => {
-        console.log('[ApplicationComponent] error %O', error);
-        window.open(binderRepoUrl, '_blank');
-      }
-    );
-
+    this.refreshToken(binderRepoUrl);
   }
 
-  public loginAndOpenExisting() {
-    var hubLoginURI = environment.binderHubAPI+'login';
+  public openExistingBinder(){
     var username = this.credentialService.getUsername();
     var hubhomeURL = environment.binderHubAPI.replace("hub","user")+username;
-    this.deploymentService.loginBinder(this.tokenService.getToken(),
-      hubLoginURI).subscribe(
+    this.refreshToken(hubhomeURL);
+  }
+
+  public refreshToken(windowUrl: string){
+    this._authService.getRefreshToken(this.tokenService.getToken()).subscribe(
       res => {
-        console.log('[ApplicationComponent]  success %O', res);
-        window.open(hubhomeURL, '_blank');
+        console.log('[ApplicationComponent]  token got refreshed %O', res);
+        this.tokenService.setToken(res);
+        this.loginAndOpen(windowUrl);
       },
       error => {
         console.log('[ApplicationComponent] error %O', error);
-        window.open(hubhomeURL, '_blank');
+        this.loginAndOpen(windowUrl);
+      }
+    );
+  }
+
+
+  public loginAndOpen(windowURL: string) {
+
+    var hubLoginURI = environment.binderHubAPI+'login';
+    this.deploymentService.loginBinder(this.tokenService.getToken(),
+      hubLoginURI).subscribe(
+      res => {
+        console.log('[ApplicationComponent] Login success !');
+        window.open(windowURL, '_blank');
+      },
+      error => {
+        console.log('[ApplicationComponent] error %O', error);
+        window.open(windowURL, '_blank');
       }
     );
   }
