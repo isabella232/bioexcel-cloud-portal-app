@@ -16,10 +16,10 @@
 <div class="modal-footer">
 
   <button type="submit" class="btn btn-primary" style="float: left;"
-          (click)="biotoolsRepoPageComponent.loginAndOpenBinder(biotoolsRepoPageComponent.selectedApplication); bsModalRef.hide();">Launch New</button>
+          (click)="biotoolsRepoPageComponent.openNewBinder(biotoolsRepoPageComponent.selectedApplication); bsModalRef.hide();">Launch New</button>
 
   <button type="button" class="btn btn-warning"
-          (click)="biotoolsRepoPageComponent.loginAndOpenExisting();">Open Existing</button>
+          (click)="biotoolsRepoPageComponent.openExistingBinder();">Open Existing</button>
 
   <button type="button" class="btn btn-default" (click)="bsModalRef.hide();">Cancel</button>
 </div>
