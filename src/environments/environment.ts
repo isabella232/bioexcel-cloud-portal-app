@@ -8,5 +8,5 @@ export const environment = {
   apiAddress: 'https://dev.api.portal.tsi.ebi.ac.uk/',
   authAddress: 'https://api.aai.ebi.ac.uk/',
   bioToolsAPI: 'https://dev.tsi.ebi.ac.uk/workbench/biotools.json',
-  binderHubAPI: 'https://proxy-binder.tsi.ebi.ac.uk/hub/'
+  binderHubAPI: 'https://hub-binder-staging.tsi.ebi.ac.uk/hub/'
 };
