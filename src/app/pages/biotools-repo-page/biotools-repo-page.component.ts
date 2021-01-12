@@ -331,7 +331,7 @@ export class BiotoolsRepoPageComponent {
 
   public openExistingBinder(){
     var username = this.credentialService.getUsername();
-    var hubhomeURL = environment.binderHubAPI.replace("hub","user")+username;
+    var hubhomeURL = environment.binderHubAPI.replace("hub/","user/")+username;
     this.refreshToken(hubhomeURL);
   }
 
