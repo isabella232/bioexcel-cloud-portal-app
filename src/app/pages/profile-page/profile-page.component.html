@@ -249,12 +249,12 @@
           <div>
             <h5>Owner</h5>
             <p>{{ teamPresenter.ownerAccountEmail }}</p>
-            <span *ngIf="teamPresenter.isOwner">
-              <h5>Team Contacts</h5>
-              <span *ngIf="(!teamPresenter.teamContactEmails ||  teamPresenter.teamContactEmails.length==0)">
-                <p>There are no other team contacts other than team owner...</p>
+            <span *ngIf="teamPresenter.isOwner || teamPresenter.isManager">
+              <h5>Team Managers</h5>
+              <span *ngIf="(!teamPresenter.managerEmails ||  teamPresenter.managerEmails.length==0)">
+                <p>There are no other team managers other than team owner...</p>
               </span>
-              <p *ngFor="let teamContactEmail of teamPresenter.teamContactEmails">{{ teamContactEmail }}</p>
+              <p *ngFor="let managerEmail of teamPresenter.managerEmails">{{ managerEmail }}</p>
             </span>
             <h5>Configurations</h5>
             <p *ngIf="!teamPresenter.configurationNames || teamPresenter.configurationNames==0">No configurations in <em>{{ teamPresenter.name }}</em></p>
